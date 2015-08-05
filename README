@@ -1,0 +1,36 @@
+Those tests are designed to be run in ether CI openstack or standalone mode to
+test docker-storage-setup command. It will use virt-install for standalone setup.
+The test cases are listed below. Some tests will have separate setup steps to
+be executed first.
+
+1. DEVS without VG (also to use root disk's extra space). It requires that the
+   root disk is in a VG. Additional setup is required. The root disk's VG
+   will be backed by the DEVS and docker pool will be in the VG.
+
+2. VG (does not exist and with DEVS). It will create the VG using root disk's
+   free space. Additiona setup is required for a additional disk.
+
+3. VG exist (same one for root disk) and with DEVS. Additional setup is
+   required. Docker pool will use the VG backed by DEVS.
+
+4. Set GROWPART=true and ROOT_SIZE=<bigger than current root size>: additional
+   setup is required to increase the root disk's backing device size. The
+   partition table should be resized afterwards. Addtional setup is required
+   to increase the root disk's backing device size, and there is no auto-grow
+   of the partition by default.
+
+5. Check docker pool data size uses 60% of the free space available by default
+   and set AUTO_EXTEND_POOL=no to prevent pool extenstion happenning
+   automatically when the it is full.
+
+6. Set POOL_AUTOEXTEND_THRESHOLD=70 and POOL_AUTOEXTEND_PERCENT=30. Once the
+   docker pool reaches the threshold, the pool will be extended by 30% of the
+   existing pool size.
+
+7. Set DATA_SIZE=80% and check the chunk_size=512 and data volume size is
+   indeed 80%.
+
+8. Set DATA_SIZE=<size equal to around 70% free space> and CHUNK_SIZE=1024,
+   and then verify them.
+
+9. Set overlayfs as the graph driver for docker.

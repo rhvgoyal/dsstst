@@ -1,0 +1,36 @@
+Test Plan for docker-storage-setup
+
+- installation/upgrade (lower priority - existing bugs etc)
+- various options
+- default settings
+- error handling (lower priority)
+- RHEL manpage (lower prioirty)
+
+test cases:
+
+- installation/upgrade:
+  - set some options for cloud image (and then atomic host upgrade).
+  - set some options in %post section of kickstart (then atomic host upgrade).
+  - d-s-s still work after upgrade [RHEL].
+
+- various options: [Atomic|RHEL]
+  - DEVS without VG (root disk's extra space)
+  - VG does not exist and with DEVS
+  - VG exist and with DEVS
+  - GROWPART (true/false)
+  - AUTO_EXTEND_POOL (true/false)
+  - POOL_AUTOEXTEND_THRESHOLD (60%)
+  - POOL_AUTOEXTEND_PERCENT (20%)
+  - CHUNK_SIZE
+  - ROOT_SIZE (extend)
+  - DATA_SIZE (-l extents % and -L size)
+  - STORAGE_DRIVER (set to nil, and then pool is not setup.) [not there yet docker-1.6.2 and 1.7.0] 
+
+- default settings: [Atomic|RHEL]
+  - DATA_SIZE (60%)
+  - VG missing to use VG for root
+  - GROWPART default disable
+
+- error handling:
+  - fill up pool and then release it.
+  - corrupt pool and then repair it.
