@@ -5,8 +5,12 @@
 import dsstst, os
 print "- start: " + os.path.basename(__file__)
 dsstst.check_root_and_destroy_pool()
+# The image used later in fill_pool() is only 10GB in size, so make sure the
+# docker pool size is smaller than to avoid running out of the space inside
+# the image.
 dsstst.conf_and_start_docker(
-	conf='POOL_AUTOEXTEND_THRESHOLD=70\nPOOL_AUTOEXTEND_PERCENT=30')
+	conf='POOL_AUTOEXTEND_THRESHOLD=70\nPOOL_AUTOEXTEND_PERCENT=30\n' +
+		'DATA_SIZE=5G')
 if dsstst.debug != 0:
 	with open(dsstst.profile_extend) as fd:
 		print fd.read()
