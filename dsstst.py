@@ -1,6 +1,12 @@
 import os, sys, re, string, subprocess, time
-debug = 1
+# Set to non-zero to enable debug.
+debug = 0
 extra = 'vdb'
+pextra = '/dev/' + extra + '1'
+# Pv for root VG
+base = '/dev/vda2'
+# default free PE size for the extra disk.
+oldpe = 319
 conf_storage_setup = "/etc/sysconfig/docker-storage-setup"
 conf_storage = "/etc/sysconfig/docker-storage"
 profile_extend = '/etc/lvm/profile/atomicos--docker-pool-extend.profile'
@@ -87,10 +93,10 @@ def get_devvg(dev='', args=''):
 		sys.exit('- error: running ' + args + '.')
 	match = re.search(r'VG Name.+', out)
 	return string.split(match.group())[2]
-# Assume there is only one pv device. Return the No. of free PE.
-def get_freepe():
+# Return the No. of free PE of the device.
+def get_freepe(dev):
 	global debug
-	out = subprocess.check_output(['pvdisplay'])
+	out = subprocess.check_output(['pvdisplay', dev])
 	match = re.search('Free PE.+', out)
 	freepe = int(string.split(match.group())[2])
 	if debug != 0:
@@ -137,9 +143,12 @@ def destroy_extra_disk():
 	vgreduce_missing(vg)
 	vgreduce_missing(newvg)
 	run_cmd(args=['vgreduce', vg, '/dev/' + extra +'1'], force=1)
-        run_cmd(args=['vgreduce', newvg, '/dev/' + extra +'1'], force=1)
+	run_cmd(args=['vgreduce', newvg, '/dev/' + extra +'1'], force=1)
 	run_cmd(args=['vgremove', newvg], force=1)
 	run_cmd(args=['pvremove', '/dev/' + extra + '1'], force=1)
+	# If don't sleep here, fdisk could race without wiping out the
+	# partition promptly.
+	time.sleep(5)
 	pipe = subprocess.Popen(['fdisk', '/dev/' + extra],
 		stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 	pipe.communicate(input='d\nw\n')
@@ -160,12 +169,12 @@ def run_cmd(args=[], force=0):
 			try:
 				subprocess.call(args, stdout=fnull,
 					stderr=subprocess.STDOUT,
-					close_fd=True)
+					close_fds=True)
 			except:
 				pass
 		else:
 			subprocess.call(args, stdout=fnull,
-				stderr=subprocess.STDOUT, close_fd=True)
+				stderr=subprocess.STDOUT, close_fds=True)
 	else:
 		if force != 0:
 			print 'run_cmd: args = ' + str(args)

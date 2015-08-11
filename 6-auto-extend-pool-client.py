@@ -11,7 +11,7 @@ dsstst.check_root_and_destroy_pool()
 dsstst.conf_and_start_docker(
 	conf='POOL_AUTOEXTEND_THRESHOLD=70\nPOOL_AUTOEXTEND_PERCENT=30\n' +
 		'DATA_SIZE=5G')
-if dsstst.debug != 0:
+if dsstst.debug != 0 and os.path.isfile(dsstst.profile_extend):
 	with open(dsstst.profile_extend) as fd:
 		print fd.read()
 # Let's dd some file inside a container around 80% to trigger the threashold.
