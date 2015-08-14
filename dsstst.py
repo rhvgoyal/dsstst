@@ -1,6 +1,6 @@
 import os, sys, re, string, subprocess, time
 # Set to non-zero to enable debug.
-debug = 0
+debug = 1
 extra = 'vdb'
 pextra = '/dev/' + extra + '1'
 # Pv for root VG
