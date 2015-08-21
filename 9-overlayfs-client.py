@@ -25,7 +25,6 @@ try:
 	os.remove(dsstst.conf_storage_setup)
 except:
 	pass
-dsstst.start_docker()
 fd = open(dsstst.conf_storage)
 lines = fd.readlines()
 fd.close()
