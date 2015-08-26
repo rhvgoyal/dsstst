@@ -33,4 +33,6 @@ be executed first.
 8. Set DATA_SIZE=<size equal to around 70% free space> and CHUNK_SIZE=1024,
    and then verify them.
 
-9. Set overlayfs as the graph driver for docker.
+9. Set overlayfs as the graph driver for docker via docker-storage.
+
+10. Set overlayfs as the graph driver for docker via docker-storage.

@@ -41,4 +41,6 @@ out = subprocess.check_output(['docker', 'info'])
 if re.search('Storage Driver: overlay', out) == None:
 	dsstst.exit_lo_umount(msg='unable to utilize overlayfs.', dev=dev)
 subprocess.call(['losetup', '-d', dev])
+subprocess.call(['systemctl', 'stop', 'docker'])
+subprocess.call(['umount', dev])
 print "- pass: " + os.path.basename(__file__)
