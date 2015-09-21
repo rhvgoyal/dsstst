@@ -13,7 +13,8 @@ else:
 	base = dsstst.base
 oldpe = dsstst.get_freepe(base) + dsstst.oldpe
 # Fill into 70% of free space to trigger auto-extension.
-size = str(int(32 * oldpe * 0.7)) + 'MB'
+# XFS has PE Size = 4MB.
+size = str(int(4 * oldpe * 0.7)) + 'MB'
 vg=dsstst.get_rootvg()
 dsstst.conf_and_start_docker(
 	conf='DATA_SIZE=' + size + '\nCHUNK_SIZE=1024\nDEVS=' + dsstst.extra)

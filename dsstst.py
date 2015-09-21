@@ -6,7 +6,7 @@ pextra = '/dev/' + extra + '1'
 # Pv for root VG
 base = '/dev/vda2'
 # default free PE size for the extra disk.
-oldpe = 319
+oldpe = 2559
 conf_storage_setup = "/etc/sysconfig/docker-storage-setup"
 conf_storage = "/etc/sysconfig/docker-storage"
 profile_extend = '/etc/lvm/profile/atomicos--docker-pool-extend.profile'
@@ -147,8 +147,8 @@ def destroy_extra_disk():
 	run_cmd(args=['vgremove', newvg], force=1)
 	run_cmd(args=['pvremove', '/dev/' + extra + '1'], force=1)
 	# If don't sleep here, fdisk could race without wiping out the
-	# partition promptly.
-	time.sleep(5)
+	# partition promptly. Sleep a bit longer to settle down.
+	time.sleep(60)
 	pipe = subprocess.Popen(['fdisk', '/dev/' + extra],
 		stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 	pipe.communicate(input='d\nw\n')

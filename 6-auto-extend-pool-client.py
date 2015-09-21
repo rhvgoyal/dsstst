@@ -9,7 +9,7 @@ print "- start: " + os.path.basename(__file__)
 # the image.
 dsstst.check_destroy_and_start_all(vg=dsstst.get_rootvg(),
 	conf='DEVS=' + dsstst.extra + '\nDATA_SIZE=5G\n' +
-	'POOL_AUTOEXTEND_THREiSHOLD=70\nPOOL_AUTOEXTEND_PERCENT=30')
+	'POOL_AUTOEXTEND_THRESHOLD=70\nPOOL_AUTOEXTEND_PERCENT=30')
 if dsstst.debug != 0 and os.path.isfile(dsstst.profile_extend):
 	with open(dsstst.profile_extend) as fd:
 		print fd.read()
