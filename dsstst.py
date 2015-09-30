@@ -202,7 +202,8 @@ def fill_pool(percent, expect):
 	count = int(old * percent * 1024)
 	subprocess.call(['docker', 'run', 'rhel7', 'dd', 'if=/dev/zero',
 		'of=/dssfile', 'bs=1M', 'count=' + str(count)])
-	time.sleep(5)
+        # Sleep longer to settle down.
+	time.sleep(60)
 	new = get_poolsize()
 	check_percent(new=new, old=old, percent=expect)
 def check_root_and_extra_disk_destroy_rootvg():
