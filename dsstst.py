@@ -146,6 +146,7 @@ def destroy_extra_disk():
 	run_cmd(args=['vgreduce', newvg, '/dev/' + extra +'1'], force=1)
 	run_cmd(args=['vgremove', newvg], force=1)
 	run_cmd(args=['pvremove', '/dev/' + extra + '1'], force=1)
+	run_cmd(args=['vgchange', '-s', '4M',  vg], force=1)
 	# If don't sleep here, fdisk could race without wiping out the
 	# partition promptly. Sleep a bit longer to settle down.
 	time.sleep(60)
